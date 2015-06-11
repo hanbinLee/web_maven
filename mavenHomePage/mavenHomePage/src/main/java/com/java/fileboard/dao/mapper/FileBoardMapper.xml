@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="dao.fileBoardMapper">
+  <resultMap type="com.java.fileboard.dto.FileBoardDto" id="fileBoardDto">
+ 		<result property="boardNumber" column="board_number"/>
+ 		<result property="writer" column="writer"/>
+ 		<result property="subject" column="subject"/>
+ 		<result property="email" column="email"/>
+ 		<result property="content" column="content"/>
+ 		<result property="password" column="password"/>
+ 		<result property="writeDate" column="write_date"/>
+ 		<result property="readCount" column="read_count"/>
+ 		<result property="ip" column="ip"/>
+ 		<result property="groupNumber" column="group_number"/>
+ 		<result property="sequenceNumber" column="sequence_number"/>
+ 		<result property="sequenceLevel" column="sequence_level"/> 		
+ 		
+ 		<result property="fileName" column="file_name"/>
+ 		<result property="path" column="path"/>
+ 		<result property="fileSize" column="file_size"/>
+ 	</resultMap>
+ 	
+ 	<select id="boardGroupNumberMax" resultType="int">
+ 		select nvl(max(group_number), 0) from board
+ 	</select>
+ 	
+ 	<update id="boardGroupNumberUpdate" parameterType="java.util.Map">
+ 		<![CDATA[
+ 			update board set sequence_number=sequence_number+1
+ 			where group_number=#{groupNumber}
+ 			and sequence_number > #{sequenceNumber}
+ 		]]>
+ 	</update>
+ 	
+ 	<insert id="boardInsert" parameterType="com.java.fileboard.dto.FileBoardDto">
+ 		insert into board(board_number, writer, subject, email, content, 
+ 								password, write_date, read_count, ip, 
+ 								group_number, sequence_number, sequence_level)
+ 								
+ 		values(board_board_number_sql.nextval, #{writer}, #{subject}, #{email}, #{content}, 
+ 				#{password}, #{writeDate}, #{readCount}, #{ip}, 
+ 				#{groupNumber}, #{sequenceNumber}, #{sequenceLevel})
+ 	</insert>
+ 	
+ 	<insert id="boardInsertFile" parameterType="com.java.fileboard.dto.FileBoardDto">
+ 		insert into board(board_number, writer, subject, email, content, 
+ 								password, write_date, read_count, ip, 
+ 								group_number, sequence_number, sequence_level, file_name, path, file_size)
+ 								
+ 		values(board_board_number_sql.nextval, #{writer}, #{subject}, #{email}, #{content}, 
+ 				#{password}, #{writeDate}, #{readCount}, #{ip}, 
+ 				#{groupNumber}, #{sequenceNumber}, #{sequenceLevel}, #{fileName}, #{path}, #{fileSize})
+ 	</insert>
+ 	
+ 	<select id="boardCount" resultType="int">
+ 		select count(*) from board
+ 	</select>
+ 	
+ 	<select id="boardList" parameterType="java.util.Map" resultMap="fileBoardDto">
+ 		<![CDATA[
+	 		select * from
+	 			(select rownum rnum, a.* from
+	 				(select * from board order by group_number desc, sequence_number asc)a)
+	 		where rnum >=#{startRow} and rnum <=#{endRow}
+ 		]]>
+ 	</select>
+ 	
+ 	<select id="boardRead" parameterType="int" resultMap="fileBoardDto">
+ 		select * from board where board_number=#{boardNumber}
+ 	</select> 	
+ 	
+ 	<update id="readCount" parameterType="int">
+ 		update board set read_count=read_count+1 
+ 		where board_number=#{boardNumber}
+ 	</update>
+ 	
+ 	<delete id="delete" parameterType="java.util.Map">
+ 		delete from board where board_number=#{boardNumber} and password=#{password}
+ 	</delete>
+ 	
+ 	<select id="getBoardUpdate" resultMap="fileBoardDto" parameterType="int">
+ 		select * from board where board_number=#{boardNumber}
+ 	</select>
+ 	
+ 	<update id="update" parameterType="com.java.fileboard.dto.FileBoardDto"> 				
+ 		update board set writer=#{writer}, subject=#{subject}, email=#{email}, content=#{content}, password=#{password} 
+ 		where board_number=#{boardNumber}
+ 	</update> 
+ 	
+ 	<update id="updateFile" parameterType="com.java.fileboard.dto.FileBoardDto"> 				
+ 		update board set writer=#{writer}, subject=#{subject}, email=#{email}, content=#{content}, password=#{password}, file_name=#{fileName}, path=#{path}, file_size=#{fileSize} 
+ 		where board_number=#{boardNumber}
+ 	</update>
+</mapper>

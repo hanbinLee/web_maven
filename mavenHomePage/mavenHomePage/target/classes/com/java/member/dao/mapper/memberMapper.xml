@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="dao.memberMapper">
+	<resultMap type="com.java.member.dto.MemberDto" id="memberDto">
+		<result property="num" column="num"/>
+		<result property="id" column="id"/>
+		<result property="password" column="password"/>
+		<result property="name" column="name"/>
+		<result property="jumin1" column="jumin1"/>
+		<result property="jumin2" column="jumin2"/>
+		<result property="email" column="email"/>
+		<result property="zipcode" column="zipcode"/>
+		<result property="address" column="address"/>
+		<result property="job" column="job"/>
+		<result property="mailing" column="mailing"/>
+		<result property="interest" column="interest"/>
+		<result property="memberLevel" column="member_level"/>
+		<result property="registerDate" column="register_date"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.java.member.dto.MemberDto" >
+		insert into member values(member_num_sql.nextval, #{id}, #{password}, #{name}, 
+											#{jumin1}, #{jumin2}, #{email}, #{zipcode}, #{address}, 
+											#{job}, #{mailing}, #{interest}, #{memberLevel}, #{registerDate})
+	</insert>
+	
+	<select id="idCheck" resultType="String" parameterType="String">
+		select id from member where id=#{id}
+	</select>
+	
+	<select id="zipcode" parameterType="String" resultType="com.java.member.dto.MemberZipcodeDto">
+		<![CDATA[
+			select * from zipcode where dong=#{dong}
+		]]>			
+	</select>
+	
+	<select id="login" parameterType="java.util.Map" resultType="String">
+		select member_level from member where id=#{id} and password=#{password}	
+	</select>
+	
+	<delete id="memberDelete" parameterType="java.util.Map">
+		delete from member where id=#{id} and password=#{password}		
+	</delete>
+	
+	<select id="memberUpdateSelect" parameterType="String" resultMap="memberDto">
+		<![CDATA[		
+			select * from member where id=#{id}
+		]]>
+	</select>
+	
+	<update id="memberUpdate" parameterType="com.java.member.dto.MemberDto">		
+		update member set password=#{password}, jumin1=#{jumin1}, jumin2=#{jumin2}, email=#{email},
+								   zipcode=#{zipcode}, address=#{address}, job=#{job}, mailing=#{mailing}, interest=#{interest} 
+		where num=#{num}
+	</update>
+	
+  </mapper>

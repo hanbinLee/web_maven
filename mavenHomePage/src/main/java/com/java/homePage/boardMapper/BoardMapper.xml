@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.BoardMapper">
+	<resultMap type="com.java.boardDto.BoardDto" id="boardDto">
+		<result property="boardNumber" column="board_number" />
+		<result property="writeDate" column="write_date" />
+		<result property="readCount" column="read_count" />
+		<result property="groupNumber" column="group_number" />
+		<result property="sequenceNumber" column="sequence_number" />
+		<result property="sequenceLevel" column="sequence_level" />
+	</resultMap>
+	
+	<select id="groupNumberMax" resultType="int">
+		select nvl(max(group_number),0) from board 
+	</select>
+	
+	<update id="groupNumberUpdate" parameterType="java.util.Map">
+		update board set sequence_number = sequence_number +1 
+			where group_number=#{groupNumber} and sequence_number > #{sequenceNumber}
+	</update>
+	
+	<insert id="boardInsert" parameterType="com.java.boardDto.BoardDto">
+		insert into board values(board_board_number_seq.nextval , #{writer} , #{subject} , #{email} , #{content} , #{password} ,
+		#{writeDate} , #{readCount} , #{ip} , #{groupNumber} , #{sequenceNumber} , #{sequenceLevel} , 'x' , 'x' , 0)
+	</insert>
+	
+	<select id="boardCount" resultType="int">
+		select count(*) from board
+	</select>
+	
+	<select id="getBoardList" parameterType="java.util.HashMap" resultMap="boardDto" >
+		<![CDATA[
+			select * from
+				(select rownum rnum , a.* from
+					(select * from board order by group_number desc , sequence_number asc ) a )
+					 where rnum >=#{startRow} and rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<update id="readCount" parameterType="int">
+		update board set read_count = read_count +1 where board_number = #{boardNumber}
+	</update>
+	
+	<select id="getInfo" parameterType="int" resultMap="boardDto">
+		select * from board where board_number = #{boardNumber}
+	</select>
+	
+	<delete id="delete" parameterType="java.util.HashMap">
+		delete  from board where board_number = #{boardNumber} and password = #{password}
+	</delete>
+	
+	<update id="update" parameterType="com.java.boardDto.BoardDto">
+		update board set subject = #{subject} , content = #{content} , password = #{password} where board_number = #{boardNumber}
+	</update>
+</mapper>

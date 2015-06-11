@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="dao.memberMapper">
+	<insert id="write" parameterType="com.java.addr.dto.Address">
+		insert into addr values(addr_num_weq.nextval , #{name} , #{phone} , #{email})
+	</insert>
+	
+	<select id="select" parameterType="String" resultType="com.java.addr.dto.Address">
+		select * from addr where name = #{name}
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		delete from addr where name = #{name}
+	</delete>
+	
+	<select id="search" parameterType="String" resultType="com.java.addr.dto.Address">
+		select * from addr where name = #{name}
+	</select>
+	
+	<update id="update" parameterType="com.java.addr.dto.Address">
+		update addr set name = #{name} , phone = #{phone} , email = #{email}
+		where num = #{num}
+	</update>
+	
+	<select id="selectUser" parameterType="String" resultType="com.java.addr.dto.Address">
+		select * from addr where name = #{name}
+	</select>
+</mapper>

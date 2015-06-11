@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- pool + pool 없어도 db 접근 가능?  dbcp , pool 라이브러리 추가-->
+	<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="jsp"/>
+		<property name="password" value="tiger"/>
+		<property name="maxActive" value="30"/>
+		<property name="maxIdle" value="30"/>
+		<property name="maxWait" value="1000"/>
+		<property name="defaultAutoCommit" value="true"/>	
+	</bean>
+	
+	<!-- 5.2 Mapper Resource-->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		 <property name="mapperLocations">
+			<list>
+				<value>classpath:com/java/addr/dao/Mapper.xml</value>				
+			<!--  	<value>classpath:com/java/member/dao/mapper/memberMapper.xml</value> -->
+			</list>
+		</property> 
+		
+		<!-- <property name="mapperLocations" value="classpath*:com/java/**/**/**/*.xml" />
+		 -->
+		<property name="dataSource" ref="dataSource"/>	
+	</bean>
+		
+	<!-- 5.3 SqlSessionFactoryBuilder().build(DriverManager,Mapper Resource-->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean"/>
+	</bean>			
+</beans>

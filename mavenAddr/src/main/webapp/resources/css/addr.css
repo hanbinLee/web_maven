@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+body{
+	font-size:13px;
+	font-fmaily:맑은 고딕;
+}
+
+a:link {
+	text-decoration:none;
+	color:blue
+}
+
+a:visited {
+	text-decoration:none;
+	color:red
+}
+
+a:hover {
+	text-decoration:underline;
+	color:black
+}
