@@ -9,18 +9,18 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h3>s ${check }</h3>
+
 	<c:choose>
 		<c:when test="${check > 0 }">
 			<script>
 				alert("성적입력 완료");
-			//	location.href="${root}/start.jsp";
+				location.href="${root}/start.jsp";
 			</script>
 		</c:when>
 		<c:otherwise>
 			<script>
 			alert("입력 실패");
-		//	location.href="${root}/write.do";
+			location.href="${root}/write.do";
 			</script>
 		</c:otherwise>
 	</c:choose>

@@ -21,7 +21,7 @@ public class SungjukServiceImpl implements SungjukService{
 		sung.setAverage(sung.getTotal()/3.0f);
 		int check = dao.write(sung);
 		
-		mav.addObject("check " , check);
+		mav.addObject("check" , check);
 	}
 	
 }
